@@ -1,0 +1,164 @@
+package com.umg.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.umg.connection.MariaDBConnection;
+
+public class TestDao {
+	
+	public static void leerEstudiantes() {
+        Connection conn = MariaDBConnection.getConnection();
+        if (conn != null) {
+            try {
+                String consulta = "SELECT * FROM estudiantes";
+                PreparedStatement statement = conn.prepareStatement(consulta);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    int idGraduando = resultSet.getInt("idestudiante");
+                    String primerNombre = resultSet.getString("primernombre");
+                    String primerApellido = resultSet.getString("primerapellido");
+                    String fechaNacimiento = resultSet.getString("fecha_nacimiento");
+                    System.out.println("ID: " + idGraduando+ ", Nombre: " + primerNombre + ", Apellido: " + primerApellido + ", fecha nacimiento: " + fechaNacimiento);
+                }
+                resultSet.close();
+                statement.close();
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println("Error al leer estudiantes: " + e.getMessage());
+            }
+        } else {
+            System.out.println("No se pudo establecer la conexión.");
+        }
+    }
+	public static boolean crearEstudiante(String nombre, String apellido, String fechaNacimiento ) {
+
+        Connection conn = MariaDBConnection.getConnection();
+
+        if (conn != null) {
+
+            try {
+
+                String consulta = "INSERT INTO estudiantes (primernombre, primerapellido, fecha_nacimiento) VALUES (?, ?, ?)";
+
+                PreparedStatement statement = conn.prepareStatement(consulta);
+
+                statement.setString(1, nombre);
+
+                statement.setString(2, apellido);
+
+                statement.setString(3, fechaNacimiento);
+
+                int filasInsertadas = statement.executeUpdate();
+
+                statement.close();
+
+                conn.close();
+
+                return filasInsertadas > 0;
+
+            } catch (SQLException e) {
+
+                System.out.println("Error al crear cliente: " + e.getMessage());
+
+                return false;
+
+            }
+
+        } else {
+
+            System.out.println("No se pudo establecer la conexión.");
+
+            return false;
+
+        }	
+
+	}
+	public static boolean actualizarEstudiantes(int id, String nombre, String apellido, String fechaNacimiento) {
+
+        Connection conn = MariaDBConnection.getConnection();
+
+        if (conn != null) {
+
+            try {
+
+                String consulta = "UPDATE estudiantes SET primernombre = ?, primerapellido = ?, fecha_nacimiento = ? WHERE idestudiante = ?";
+
+                PreparedStatement statement = conn.prepareStatement(consulta);
+
+                statement.setString(1, nombre);
+
+                statement.setString(2, apellido);
+
+                statement.setString(3, fechaNacimiento);
+
+                statement.setInt(4, id);
+
+                int filasActualizadas = statement.executeUpdate();
+
+                statement.close();
+
+                conn.close();
+
+                return filasActualizadas > 0;
+
+            } catch (SQLException e) {
+
+                System.out.println("Error al actualizar estudiente: " + e.getMessage());
+
+                return false;
+
+            }
+
+        } else {
+
+            System.out.println("No se pudo establecer la conexión.");
+
+            return false;
+
+        }
+        
+        
+	}
+	 public static boolean eliminarEstudiantes(int id) {
+
+	        Connection conn = MariaDBConnection.getConnection();
+
+	        if (conn != null) {
+
+	            try {
+
+	                String consulta = "DELETE FROM estudiantes WHERE idestudiante = ?";
+
+	                PreparedStatement statement = conn.prepareStatement(consulta);
+
+	                statement.setInt(1, id);
+
+	                int filasEliminadas = statement.executeUpdate();
+
+	                statement.close();
+
+	                conn.close();
+
+	                return filasEliminadas > 0;
+
+	            } catch (SQLException e) {
+
+	                System.out.println("Error al eliminar estudiante: " + e.getMessage());
+
+	                return false;
+
+	            }
+
+	        } else {
+
+	            System.out.println("No se pudo establecer la conexión.");
+
+	            return false;
+
+	        }
+
+	    }
+}
