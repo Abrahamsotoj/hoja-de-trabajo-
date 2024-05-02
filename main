@@ -1,0 +1,22 @@
+package com.umg.test;
+
+import com.umg.dao.TestDao;
+
+public class TestMain {
+
+	public static void main(String[] args) {
+		
+		
+		
+		TestDao.crearEstudiante("pedro","reyes","2014-08-02");
+		TestDao.leerEstudiantes();
+		System.out.println("================");
+		//TestDao.actualizarEstudiantes(1,"yoni","lopez","2012-05-04");
+		//TestDao.leerEstudiantes();
+		//System.out.println("================");
+		//TestDao.eliminarEstudiantes(2);
+		//TestDao.leerEstudiantes();
+		
+	}
+
+}
